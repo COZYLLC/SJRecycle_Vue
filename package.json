@@ -15,7 +15,6 @@
     "buefy": "^0.9.7",
     "core-js": "^3.6.5",
     "dotenv": "^8.6.0",
-    "node-sass": "^4.14.1",
     "vue": "^2.6.11",
     "vue-burger-menu": "^2.0.5",
     "vue-moment": "^4.1.0",
@@ -35,7 +34,6 @@
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^2.2.1",
-    "sass-loader": "^7.3.1",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
