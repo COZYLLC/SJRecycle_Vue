@@ -118,10 +118,6 @@ export default {
   color: #2c3e50;
 }
 
-.v-sidebar-menu {
-  background-color: rgb(55, 206, 55);
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition-property: opacity;
