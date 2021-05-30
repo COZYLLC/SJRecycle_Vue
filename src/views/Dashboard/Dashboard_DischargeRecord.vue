@@ -161,6 +161,9 @@ export default {
       this.$axios.get(`${process.env.VUE_APP_API_URL}/trash/remove?discharge_id=${discharge_id}`)
       .then(res => {
         console.log(res)
+        if (res.data.reqSuccess) {
+          console.log("done!")
+        }
       })
     }
   },
