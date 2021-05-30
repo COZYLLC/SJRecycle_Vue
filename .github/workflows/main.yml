@@ -30,7 +30,7 @@ jobs:
         password: ${{ secrets.SJRECYCLE_PASSWORD }}
         port: ${{ secrets.SJRECYCLE_PORT }} # default : 22
         script: |
-          cd ${{ secrets.OBOON_WEB_PATH }} && git pull
+          cd ${{ secrets.SJRECYCLE_PATH }} && git pull
           npm install
           npm run build
 
