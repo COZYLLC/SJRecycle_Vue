@@ -1,5 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 name: WEB
+
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
@@ -24,12 +25,13 @@ jobs:
       if: github.event_name == 'pull_request'
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.OBOON_HOST }}
-        username: ${{ secrets.OBOON_USERNAME }}
-        password: ${{ secrets.OBOON_PASSWORD }}
-        # port: ${{ secrets.PORT }} # default : 22
+        host: ${{ secrets.SJRECYCLE_HOST }}
+        username: ${{ secrets.SJRECYCLE_USERNAME }}
+        password: ${{ secrets.SJRECYCLE_PASSWORD }}
+        port: ${{ secrets.SJRECYCLE_PORT }} # default : 22
         script: |
           cd ${{ secrets.OBOON_WEB_PATH }} && git pull
           npm install
           npm run build
+
  
