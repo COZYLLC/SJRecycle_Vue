@@ -162,7 +162,7 @@ export default {
       .then(res => {
         console.log(res)
         if (res.data.reqSuccess) {
-          console.log("done!3")
+          console.log("done!4..")
         }
       })
     }
