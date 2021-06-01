@@ -1,15 +1,15 @@
 <template>
   <section>
     <b-table
-      :data="data"
+      :data="discharges"
       ref="table"
       paginated
-      per-page="5"
+      per-page="10"
       :opened-detailed="defaultOpenedDetails"
       detailed
-      detail-key="id"
+      detail-key="discharge_id"
       :detail-transition="`fade`"
-      @details-open="(row) => $buefy.toast.open(`Expanded ${row.discharge_id}`)"
+      @details-open="(row) => getAnswers(row.discharge_id)"
       :show-detail-icon="true"
       aria-next-label="Next page"
       aria-previous-label="Previous page"
@@ -86,13 +86,21 @@
           <div class="media-content">
             <div class="content">
               <h6 class="title is-4">질문 결과</h6>
-              <div v-for="(answer, i) in answers" :key="i">
+              <div
+                v-for="(answer, i) in answers[props.row.discharge_id]"
+                :key="i"
+              >
                 <p class="title is-6">
                   {{ i + 1 }}. {{ questions[i].question }}
                 </p>
                 {{ questions[i][`sel_${answer.answer}`] }}
               </div>
-              <b-button style="margin-top:1vh" type="is-danger" v-on:click="removeRow(props.row.discharge_id)">삭제</b-button>
+              <b-button
+                style="margin-top: 1vh"
+                type="is-danger"
+                v-on:click="removeRow(props.row.discharge_id)"
+                >삭제</b-button
+              >
             </div>
           </div>
         </article>
@@ -102,39 +110,12 @@
 </template>
 
 <script>
-const data = require("@/sample.json");
-
 export default {
   data() {
     return {
-      data,
+      discharges: [],
       defaultOpenedDetails: [1],
-      answers: [
-        {
-          question_id: 0,
-          answer: 1,
-        },
-        {
-          question_id: 1,
-          answer: 2,
-        },
-        {
-          question_id: 2,
-          answer: 3,
-        },
-        {
-          question_id: 3,
-          answer: 3,
-        },
-        {
-          question_id: 4,
-          answer: 3,
-        },
-        {
-          question_id: 5,
-          answer: 1,
-        },
-      ],
+      answers: [],
       questions: [],
     };
   },
@@ -148,24 +129,55 @@ export default {
       console.log(res.data);
       this.questions = res.data.questions;
     });
+    const date = this.$moment();
+
+    this.$axios
+      .get(
+        `${
+          process.env.VUE_APP_API_URL
+        }/trash/byDate?start=${date.year()}-${this.addZero(
+          date.month()
+        )}-01&end=${date.year()}-${this.addZero(date.month())}-${date
+          .endOf("month")
+          .date()}`
+      )
+      .then((res) => {
+        console.log(res);
+        this.discharges = res.data.discharges;
+      });
   },
   methods: {
-    getAnswers() {
+    addZero(number) {
+      var newNumber = 0;
+      if (number.toString().length < 2) {
+        newNumber = 0 + number.toString();
+      } else {
+        newNumber = number;
+      }
+      return newNumber;
+    },
+    removeRow(discharge_id) {
       this.$axios
-        .get(`${process.env.VUE_APP_API_URL}/trash/answers`)
+        .get(
+          `${process.env.VUE_APP_API_URL}/trash/remove?discharge_id=${discharge_id}`
+        )
         .then((res) => {
-          this.answers = res.data.answers;
+          console.log(res);
+          if (res.data.reqSuccess) {
+            console.log("done!!!!");
+          }
         });
     },
-    removeRow(discharge_id){
-      this.$axios.get(`${process.env.VUE_APP_API_URL}/trash/remove?discharge_id=${discharge_id}`)
-      .then(res => {
-        console.log(res)
-        if (res.data.reqSuccess) {
-          console.log("done!!!!")
-        }
-      })
-    }
+    getAnswers(discharge_id) {
+      this.$axios
+        .get(
+          `${process.env.VUE_APP_API_URL}/trash/answers?discharge_id=${discharge_id}`
+        )
+        .then((res) => {
+          this.answers[discharge_id] = res.data.answers;
+          this.$forceUpdate();
+        });
+    },
   },
 };
 </script>

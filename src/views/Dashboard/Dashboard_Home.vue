@@ -74,6 +74,7 @@ export default {
         `${process.env.VUE_APP_API_URL}/trash/averageAmount?start=2021-05-01&end=2021-05-31`
       )
       .then((res) => {
+        console.log(res.data)
         this.discharge.amount = parseInt(
           (res.data.averageAmount.toFixed(2) * 100).toFixed(0)
         );
