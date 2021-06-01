@@ -29,11 +29,11 @@
               <div class="tile is-parent is-vertical">
                 <article class="tile is-child notification is-primary">
                   <p class="title is-size-4-mobile">최근 분리수거 점수</p>
-                  <p class="subtitle">{{ discharge.score }}</p>
+                  <p class="subtitle">{{ discharge.point }}</p>
                 </article>
                 <article class="tile is-child notification is-warning">
                   <p class="title is-size-4-mobile">최근 쓰레기 배출량</p>
-                  <p class="subtitle">{{ discharge.amount }}</p>
+                  <p class="subtitle">{{ discharge.amount * 100 }} %</p>
                 </article>
                 <article class="tile is-child notification is-info">
                   <p class="title is-size-4-mobile">분리수거 내역 확인</p>
@@ -55,7 +55,7 @@ export default {
       //isActive: true,
       discharge: {
         amount: 0,
-        score: 0,
+        point: 0,
       },
     };
   },
@@ -68,7 +68,7 @@ export default {
         .then((res) => {
           console.log(res.data);
           this.discharge.amount = res.data.data.amount;
-          this.discharge.score = res.data.data.score;
+          this.discharge.point = res.data.data.point;
         });
       if (
         // 현재 경로와 선택한 경로가 다르면

@@ -1,13 +1,14 @@
 <template>
   <div>
     <h1 class="title is-size-3">질문지 관리</h1>
-    <b-menu style="margin-bottom:2vh">
+    <b-menu style="margin-bottom: 2vh">
       <b-menu-list>
         <b-menu-item
           v-for="item in menu"
           :key="item"
           :icon="item.icon"
           :label="item.label"
+          @click="item.onClick"
           active="true"
         ></b-menu-item>
       </b-menu-list>
@@ -16,7 +17,7 @@
       class="card"
       v-for="(question, i) in questions"
       :key="i"
-      style="margin-bottom: 2vh;"
+      style="margin-bottom: 2vh"
     >
       <div class="card-content">
         <h1 class="title is-4">{{ question.question }}</h1>
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import { SnackbarProgrammatic as Snackbar } from "buefy";
 export default {
   created() {
     this.$axios.get(`${process.env.VUE_APP_API_URL}/question`).then((res) => {
@@ -65,6 +67,11 @@ export default {
         {
           label: "질문 추가",
           icon: "plus",
+          onClick: () => {
+            Snackbar.open({
+              message: "준비중인 기능입니다.",
+            });
+          },
         },
       ],
       dropFiles: {},
