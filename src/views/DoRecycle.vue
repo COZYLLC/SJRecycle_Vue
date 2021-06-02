@@ -52,7 +52,9 @@
     <b-field label="쓰레기 배출량">
       <b-slider :min="0" :max="10">
         <template v-for="amount in [0, 5, 10]">
-          <b-slider-tick :value="amount" :key="amount">{{ amount }}</b-slider-tick>
+          <b-slider-tick :value="amount" :key="amount">{{
+            amount
+          }}</b-slider-tick>
         </template>
       </b-slider>
     </b-field>
@@ -91,10 +93,6 @@
 </template>
 
 <script>
-function rand(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 import { SnackbarProgrammatic as Snackbar } from "buefy";
 export default {
   name: "DoRecycle",
@@ -174,11 +172,9 @@ export default {
 
       formData.append("img", this.dropFiles); //Todo: Backend
       formData.append("grade_class", "3-3");
-      formData.append("amount", rand(1, 10) / 10);
+      formData.append("amount", this.amount);
 
-      var currTime = this.$moment(`2021-05-${rand(10, 31)}`).format(
-        "YYYY-MM-DD"
-      );
+      var currTime = this.$moment().format("YYYY-MM-DD");
       formData.set("time", currTime);
 
       if (this.dropFiles != "" && this.dropFiles != null) {
