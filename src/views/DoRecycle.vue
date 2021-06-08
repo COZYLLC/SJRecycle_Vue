@@ -31,6 +31,7 @@
               </b-field>
             </section>
             <b-button
+              :disabled="!enableToUse"
               type="is-success"
               style="width: 100%; margin-top: 10px"
               v-on:click="uploadImage"
@@ -50,13 +51,7 @@
     <!-- Question Start -->
 
     <b-field label="쓰레기 배출량">
-      <b-slider :min="0" :max="10">
-        <template v-for="amount in [0, 5, 10]">
-          <b-slider-tick :value="amount" :key="amount">{{
-            amount
-          }}</b-slider-tick>
-        </template>
-      </b-slider>
+      <b-slider :min="0" :max="10" ticks v-model="amount"></b-slider>
     </b-field>
     <div
       class="card"
@@ -104,6 +99,8 @@ export default {
       radio: [],
       amount: 0,
       questions: [],
+      enableToUse: false,
+      grade_class: '',
     };
   },
   computed: {
@@ -115,6 +112,30 @@ export default {
     },
   },
   created() {
+    const date = this.$moment();
+    if (process.env.NODE_ENV == "production") {
+      if (!(date.day() == 2 || date.day() == 5) || date.hour() > 13) {
+        this.available = false;
+        Snackbar.open({
+          message: "수요일과 금요일 1시 이전에만 배출할 수 있습니다.",
+          type: "is-danger",
+        });
+        return;
+      }
+    }
+
+    this.grade_class = this.$store.getters.getGradeClass;
+    if (this.grade_class == null || this.grade_class == "") {
+      Snackbar.open({
+        message: "인증 후 이용해주세요.",
+        type: "is-danger",
+      });
+      this.enableToUse = false;
+      return;
+    }else {
+      this.enableToUse = true;
+    }
+
     this.$axios.get(`${process.env.VUE_APP_API_URL}/question`).then((res) => {
       if (res.data.reqSuccess) {
         var questions = res.data.questions;
@@ -133,17 +154,6 @@ export default {
         console.log(this.questions);
       }
     });
-
-    const date = this.$moment();
-    if (process.env.NODE_ENV == "production") {
-      if (!(date.day() == 2 || date.day() == 5) || date.hour() > 13) {
-        this.available = false;
-        Snackbar.open({
-          message: "수요일과 금요일 1시 이전에만 배출할 수 있습니다.",
-          type: "is-danger",
-        });
-      }
-    }
   },
   methods: {
     uploadImage() {
@@ -170,9 +180,9 @@ export default {
         );
       }
 
-      formData.append("img", this.dropFiles); //Todo: Backend
-      formData.append("grade_class", "3-3");
-      formData.append("amount", this.amount);
+      formData.append("img", this.dropFiles);
+      formData.append("grade_class", this.grade_class);
+      formData.append("amount", this.amount / 10);
 
       var currTime = this.$moment().format("YYYY-MM-DD");
       formData.set("time", currTime);

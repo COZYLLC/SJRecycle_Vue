@@ -30,6 +30,8 @@
                 /></b-field>
               </p>
             </article>
+            <!--
+
             <article
               class="tile is-child notification is-info"
               v-on:click="$router.push('/class')"
@@ -37,6 +39,8 @@
               <p class="title is-size-4-mobile">우리 반 분리수거 상태</p>
               <p class="subtitle">→</p>
             </article>
+
+            -->
             <article
               class="tile is-child notification is-info"
               v-on:click="$router.push('/dorecycle')"
@@ -54,6 +58,9 @@
 <script>
 export default {
   name: "Home",
+  created() {
+    console.log(this.$store.getters.getGradeClass)
+  },
   data() {
     return {
       firstClass: {
@@ -75,7 +82,6 @@ export default {
 };
 </script>
 <style>
-
 .tile {
   background: white;
 }
