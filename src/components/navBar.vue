@@ -13,15 +13,14 @@
         <b-navbar-item> 관리도구 </b-navbar-item>
       </router-link>
 
-      <router-link :to="`#`">
-        <b-navbar-item @click="login"> 로그인 </b-navbar-item>
+      <router-link :to="'/auth/verify'">
+        <b-navbar-item > 로그인 </b-navbar-item>
       </router-link>
     </template>
   </b-navbar>
 </template>
 
 <script>
-import { SnackbarProgrammatic as Snackbar } from "buefy";
 import logo from "@/assets/logo.png";
 export default {
   data() {
@@ -30,9 +29,6 @@ export default {
     };
   },
   methods: {
-    login() {
-      Snackbar.open({ message: `준비중인 기능입니다.` });
-    },
   },
 };
 </script>

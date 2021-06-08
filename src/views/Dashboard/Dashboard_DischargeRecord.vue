@@ -19,7 +19,6 @@
       <b-table-column
         field="discharge_id"
         label="ID"
-        width="40"
         numeric
         centered
         v-slot="props"
@@ -74,16 +73,16 @@
 
       <template #detail="props">
         <article class="media">
-          <figure class="media-left">
-            <p class="image">
-              <img
-                :src="props.row.image_url"
-                ratio="1by1"
-                style="width: 25vw"
-              />
-            </p>
-          </figure>
           <div class="media-content">
+            <figure class="media-left" style="margin-bottom: 2vh">
+              <p class="image">
+                <b-image
+                  :src="props.row.image_url"
+                  :responsive="true"
+                  style="max-width: 500px"
+                />
+              </p>
+            </figure>
             <div class="content">
               <h6 class="title is-4">질문 결과</h6>
               <div
@@ -95,12 +94,14 @@
                 </p>
                 {{ questions[i][`sel_${answer.answer}`] }}
               </div>
+
+              <!--
               <b-button
                 style="margin-top: 1vh"
                 type="is-danger"
                 v-on:click="removeRow(props.row.discharge_id)"
                 >삭제</b-button
-              >
+              >-->
             </div>
           </div>
         </article>
@@ -110,6 +111,7 @@
 </template>
 
 <script>
+import { SnackbarProgrammatic } from "buefy";
 export default {
   data() {
     return {
@@ -127,35 +129,41 @@ export default {
   created() {
     this.$axios.get(`${process.env.VUE_APP_API_URL}/question`).then((res) => {
       console.log(res.data);
-      this.questions = res.data.questions;
     });
     const date = this.$moment();
+    const dateString = date.format("YYYY-MM");
 
     this.$axios
       .get(
         `${
           process.env.VUE_APP_API_URL
-        }/trash/byDate?start=${date.year()}-${this.addZero(
-          date.month()
-        )}-01&end=${date.year()}-${this.addZero(date.month())}-${date
+        }/trash/byDate?start=${dateString}-01&end=${dateString}-${date
           .endOf("month")
           .date()}`
       )
       .then((res) => {
         console.log(res);
         this.discharges = res.data.discharges;
+        if (res.data.reqSuccess && res.data.discharges != null) {
+          this.questions = res.data.questions;
+        } else {
+          SnackbarProgrammatic.open({
+            message: "데이터가 없는 것 같아요.",
+            type: "is-warning",
+          });
+          this.discharges = [
+            {
+              discharge_id: "데이터가 없습니다.",
+              grade_class: "",
+              point: "",
+              amount: "",
+              time: "",
+            },
+          ];
+        }
       });
   },
   methods: {
-    addZero(number) {
-      var newNumber = 0;
-      if (number.toString().length < 2) {
-        newNumber = 0 + number.toString();
-      } else {
-        newNumber = number;
-      }
-      return newNumber;
-    },
     removeRow(discharge_id) {
       this.$axios
         .get(

@@ -8,6 +8,7 @@ import Dashboard_Home from "../views/Dashboard/Dashboard_Home.vue";
 import Dashboard_Class from "../views/Dashboard/Dashboard_Class.vue";
 import Dashboard_DischargeRecord from "../views/Dashboard/Dashboard_DischargeRecord.vue";
 import Dashboard_Question from "../views/Dashboard/Dashboard_Question.vue";
+import Verify from "../views/Auth/Verify.vue"
 
 Vue.use(VueRouter);
 
@@ -61,6 +62,11 @@ const routes = [
         },
       },
     ],
+
+  },
+  {
+    path: "/auth/verify",
+    component: Verify,
   },
 ];
 
