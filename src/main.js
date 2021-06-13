@@ -25,26 +25,42 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import axios from "axios";
-import VueMoment from 'vue-moment'
-import VueSidebarMenu from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
-Vue.use(VueSidebarMenu)
-Vue.use(VueMoment)
+import VueMoment from "vue-moment";
+import VueSidebarMenu from "vue-sidebar-menu";
+import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
+Vue.use(VueSidebarMenu);
+Vue.use(VueMoment);
 
-Vue.directive('touppercase', {
+Vue.directive("touppercase", {
   update(el) {
     const koreanCheck = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
     if (koreanCheck.test(el.value)) {
-      alert("소문자와 영어만 입력할 수 있습니다.")
-      el.value = ''
-    }else {
-      el.value = el.value.toUpperCase()
+      alert("소문자와 영어만 입력할 수 있습니다.");
+      el.value = "";
+    } else {
+      el.value = el.value.toUpperCase();
     }
-
   },
-})
+});
 
-library.add(faUpload, faInfo, faCog, faUserCircle, faSchool, faRecycle, faEdit, faCaretDown, faCaretUp, faCaretLeft, faCaretRight, faQuestion, faPlus, faArrowUp, faAngleRight, faAngleLeft);
+library.add(
+  faUpload,
+  faInfo,
+  faCog,
+  faUserCircle,
+  faSchool,
+  faRecycle,
+  faEdit,
+  faCaretDown,
+  faCaretUp,
+  faCaretLeft,
+  faCaretRight,
+  faQuestion,
+  faPlus,
+  faArrowUp,
+  faAngleRight,
+  faAngleLeft
+);
 Vue.component("vue-fontawesome", FontAwesomeIcon);
 Vue.prototype.$axios = axios;
 

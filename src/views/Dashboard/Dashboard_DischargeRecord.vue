@@ -86,11 +86,12 @@
             <div class="content">
               <h6 class="title is-4">질문 결과</h6>
               <div
-                v-for="(answer, i) in answers[props.row.discharge_id]"
+                v-for="(answer, i) in answers.get(props.row.discharge_id)"
                 :key="i"
               >
                 <p class="title is-6">
-                  {{ i + 1 }}. {{ questions[i].question }}
+                  {{ i + 1 }}.
+                  {{ questions[i].question }}
                 </p>
                 {{ questions[i][`sel_${answer.answer}`] }}
               </div>
@@ -117,18 +118,15 @@ export default {
     return {
       discharges: [],
       defaultOpenedDetails: [1],
-      answers: [],
-      questions: [],
+      answers: new Map(),
+      changeTracker: 1,
+      questions: new Array(),
     };
-  },
-  computed: {
-    answerComputed() {
-      return this.answers;
-    },
   },
   created() {
     this.$axios.get(`${process.env.VUE_APP_API_URL}/question`).then((res) => {
       console.log(res.data);
+      this.questions = res.data.questions;
     });
     const date = this.$moment();
     const dateString = date.format("YYYY-MM");
@@ -142,10 +140,8 @@ export default {
           .date()}`
       )
       .then((res) => {
-        console.log(res);
-        this.discharges = res.data.discharges;
         if (res.data.reqSuccess && res.data.discharges != null) {
-          this.questions = res.data.questions;
+          this.discharges = res.data.discharges;
         } else {
           SnackbarProgrammatic.open({
             message: "데이터가 없는 것 같아요.",
@@ -177,14 +173,17 @@ export default {
         });
     },
     getAnswers(discharge_id) {
-      this.$axios
-        .get(
-          `${process.env.VUE_APP_API_URL}/trash/answers?discharge_id=${discharge_id}`
-        )
-        .then((res) => {
-          this.answers[discharge_id] = res.data.answers;
-          this.$forceUpdate();
-        });
+      if (this.answers.get(discharge_id) == null) {
+        this.$axios
+          .get(
+            `${process.env.VUE_APP_API_URL}/trash/answers?discharge_id=${discharge_id}`
+          )
+          .then((res) => {
+            this.answers.set(discharge_id, res.data.answers);
+            console.log(this.answers);
+            this.$forceUpdate();
+          });
+      }
     },
   },
 };
