@@ -34,9 +34,6 @@
     ></router-view>
   </div>
 </template>
-
-<style>
-</style>
 <script>
 import navBar from "@/components/navBar.vue";
 export default {
@@ -50,11 +47,11 @@ export default {
     };
   },
   methods: {
-    check(){
+    check() {
       if (this.code == process.env.VUE_APP_ADMIN_KEY) {
-        this.notCertificated = false
+        this.notCertificated = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

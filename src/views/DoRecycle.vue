@@ -80,7 +80,11 @@
         </div>
       </div>
     </div>
-    <b-button type="is-success" style="width: 100%" v-on:click="submit"
+    <b-button
+      type="is-success"
+      style="width: 100%"
+      v-on:click="submit"
+      :disabled="!submitable"
       >확인</b-button
     >
     <!-- Question End -->
@@ -100,7 +104,8 @@ export default {
       amount: 0,
       questions: [],
       enableToUse: false,
-      grade_class: '',
+      grade_class: "",
+      submitable: true,
     };
   },
   computed: {
@@ -126,13 +131,14 @@ export default {
 
     this.grade_class = this.$store.getters.getGradeClass;
     if (this.grade_class == null || this.grade_class == "") {
+      this.$router.go();
       Snackbar.open({
         message: "인증 후 이용해주세요.",
         type: "is-danger",
       });
       this.enableToUse = false;
       return;
-    }else {
+    } else {
       this.enableToUse = true;
     }
 
@@ -165,6 +171,7 @@ export default {
       }
     },
     submit() {
+      this.submitable = false;
       let formData = new FormData();
       for (let i = 0; i < this.questions.length; i++) {
         if (this.radio[i] == undefined) {
@@ -197,6 +204,7 @@ export default {
           .then((res) => {
             console.log(res);
             if (res.data.reqSuccess == true) {
+              this.$router.push("/");
               Snackbar.open(res.data.message);
             } else {
               try {
