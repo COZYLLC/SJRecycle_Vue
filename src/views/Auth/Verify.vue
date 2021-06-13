@@ -44,22 +44,23 @@ export default {
   methods: {
     submit() {
       const data = {
-        password: crypto.createHash("sha256").update(this.code.toUpperCase()).digest("base64"),
+        password: crypto
+          .createHash("sha256")
+          .update(this.code.toUpperCase())
+          .digest("base64"),
       };
       this.$axios
         .post(`${process.env.VUE_APP_API_URL}/login`, data)
         .then((res) => {
           if (res.data.reqSuccess && res.data.loginSuccess) {
-            console.log(res.data.grade_class)
-            this.$store
-              .dispatch("loginA", res.data.grade_class)
-              .then(() => {
-                Snackbar.open({
-                  message: "인증에 성공하였습니다!",
-                  type: "is-success",
-                });
-                this.$router.push("/");
+            console.log(res.data.grade_class);
+            this.$store.dispatch("loginA", res.data.grade_class).then(() => {
+              Snackbar.open({
+                message: "인증에 성공하였습니다!",
+                type: "is-success",
               });
+              this.$router.push("/");
+            });
           } else {
             Snackbar.open({
               message: "인증에 실패했습니다",
